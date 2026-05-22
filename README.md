@@ -124,6 +124,10 @@ The language is defined. The AST mapping is stable. The IR schema is locked. We 
 6. 🔄 Playground (web demo)
 7. 📋 Community adapters
 
+## Design Philosophy
+
+Read [DESIGN.md](DESIGN.md) — explains self-healing guards, the safety hierarchy, tier-explicit architecture, and the adapter contract with concrete examples.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
