@@ -70,6 +70,7 @@
                 <button class="output-tab tab-inactive px-4 py-2 text-xs" data-tab="errors">Errors</button>
                 <button class="output-tab tab-inactive px-4 py-2 text-xs" data-tab="ast">AST</button>
                 <button class="output-tab tab-inactive px-4 py-2 text-xs" data-tab="tokens">Tokens</button>
+                <button class="output-tab tab-inactive px-4 py-2 text-xs" data-tab="dashboard">Dashboard</button>
             </div>
             <div id="output-ir" class="output-panel flex-1 overflow-auto p-4">
                 <pre id="irOutput" class="editor-font text-sm text-gray-300 whitespace-pre-wrap">Click "Compile" to see the IR output.</pre>
@@ -82,6 +83,11 @@
             </div>
             <div id="output-tokens" class="output-panel flex-1 overflow-auto p-4 hidden">
                 <pre id="tokensOutput" class="editor-font text-sm text-gray-300 whitespace-pre-wrap">Click "Compile" to see the tokens.</pre>
+            </div>
+            <div id="output-dashboard" class="output-panel flex-1 overflow-auto p-4 hidden">
+                <div id="dashboardContent" class="space-y-4">
+                    <p class="text-gray-500 text-sm">Compile to see compliance dashboard.</p>
+                </div>
             </div>
         </div>
     </div>
