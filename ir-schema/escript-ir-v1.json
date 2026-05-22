@@ -177,6 +177,29 @@
         "input_type": { "type": "string" },
         "output_type": { "type": "string" },
         "fail_mode": { "type": "string", "enum": ["closed", "open"], "default": "closed" },
+        "ceiling": { "type": "number", "description": "Hard numeric ceiling (e.g. spending limit)" },
+        "trigger": {
+          "type": "object",
+          "description": "Event that activates this guard",
+          "properties": {
+            "on": { "type": "string", "description": "Event name (e.g. layer_violation, provision_request)" }
+          }
+        },
+        "action": {
+          "type": "object",
+          "description": "Action dispatched when guard fires",
+          "properties": {
+            "dispatch": { "type": "string", "description": "Job or service to invoke (e.g. rector_auto_fix)" },
+            "notify": { "type": "string", "description": "Notification channel (e.g. slack, email)" },
+            "block": { "type": "boolean", "description": "Block the pipeline (default: true for fail_mode closed)" }
+          }
+        },
+        "conditions": {
+          "type": "object",
+          "description": "Conditions that must be true for the action to fire",
+          "additionalProperties": true
+        },
+        "unsafe_acknowledged": { "type": "boolean", "default": false },
         "meta": { "type": "object" }
       }
     },

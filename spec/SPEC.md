@@ -114,15 +114,26 @@ dto_field        = [ annotation_list ]
 
 (* ─── Guard Declaration ──────────────────────────────────── *)
 
-guard_decl       = "guard" IDENT "{"
+guard_decl       = [ annotation_list ]
+                   "guard" IDENT "{"
                      "tier"      ":" tier_prefix ";"
                      "input"     ":" IDENT ";"
                      "output"    ":" IDENT ";"
                      [ "fail_mode" ":" fail_mode ";" ]
+                     [ "ceiling"  ":" FLOAT ";" ]
                    "}" ;
 
 fail_mode        = "closed" | "open" ;
 (* NOTE: "open" requires @unsafe — enforced at compile time *)
+
+(* ─── Guard Annotations (reactive behavior) ─────────────── *)
+(* Guards support @trigger, @action, @condition annotations  *)
+(* that define reactive rules:                                *)
+(*   @trigger(on: "event_name")                               *)
+(*   @action(dispatch: "job_name")                            *)
+(*   @condition(key: value, ...)                              *)
+(* This enables guards to act as behavioral rules:            *)
+(*   "When X happens, if Y is true, do Z."                   *)
 
 (* ─── Island Declaration ─────────────────────────────────── *)
 
