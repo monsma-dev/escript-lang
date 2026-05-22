@@ -3,10 +3,10 @@ name: Deploy EScript Playground to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths: [ 'playground/**' ]
+    paths: [ 'playground/**', 'content/blog/**' ]
   pull_request:
     branches: [ main ]
-    paths: [ 'playground/**' ]
+    paths: [ 'playground/**', 'content/blog/**' ]
 
 permissions:
   contents: read
@@ -31,6 +31,8 @@ jobs:
       run: |
         mkdir -p dist
         cp -r playground/* dist/
+        mkdir -p dist/blog
+        cp -r content/blog/* dist/blog/
     
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
