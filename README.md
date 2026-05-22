@@ -121,8 +121,10 @@ The language is defined. The AST mapping is stable. The IR schema is locked. We 
 3. ✅ IR schema (adapter contract)
 4. ✅ Gate binary (Rust, schema-driven)
 5. ✅ Reference compiler (PHP-based, `compiler/bin/escript compile`)
-6. 🔄 Playground (web demo)
-7. 📋 Community adapters
+6. ✅ Playground (browser-based compiler, `playground/`)
+7. ✅ Laravel adapter (`adapters/laravel/`)
+8. ✅ Symfony adapter (`adapters/symfony/`)
+9. 📋 Community adapters (Django, Express, etc.)
 
 ## Design Philosophy
 

@@ -153,9 +153,14 @@ final class Cli
 
     private function irOutputPath(string $sourceFile, string $sourceDir, string $outputDir): string
     {
-        $relative = str_replace($sourceDir, '', $sourceFile);
-        $relative = ltrim($relative, '/\\');
-        $irName = preg_replace('/\.es$/', '.ir.json', $relative);
+        // If source is a single file, use its basename
+        if (is_file($sourceDir)) {
+            $irName = preg_replace('/\.es$/', '.ir.json', basename($sourceFile));
+        } else {
+            $relative = str_replace($sourceDir, '', $sourceFile);
+            $relative = ltrim($relative, '/\\');
+            $irName = preg_replace('/\.es$/', '.ir.json', $relative);
+        }
         return rtrim($outputDir, '/\\') . DIRECTORY_SEPARATOR . $irName;
     }
 
