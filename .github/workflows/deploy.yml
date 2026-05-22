@@ -45,14 +45,14 @@ jobs:
                     theme: {
                         extend: {
                             colors: {
-                                'evolution-dark': '#0f172a',
-                                'evolution-darker': '#020617',
-                                'evolution-border': '#1e293b',
+                                'evolution-dark': '#1e293b',
+                                'evolution-darker': '#0f172a',
+                                'evolution-border': '#334155',
                                 'evolution-accent': '#3b82f6',
                                 'evolution-success': '#10b981',
                                 'evolution-warning': '#f59e0b',
                                 'evolution-danger': '#ef4444',
-                                'evolution-muted': '#64748b',
+                                'evolution-muted': '#94a3b8',
                             }
                         }
                     }
@@ -148,7 +148,7 @@ jobs:
                                 <svg class="w-4 h-4 text-evolution-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
-                                <span class="text-sm font-medium text-gray-300">source.es</span>
+                                <span class="text-sm font-medium text-gray-200">source.es</span>
                                 <span id="lineCount" class="text-xs text-evolution-muted">0 lines</span>
                             </div>
                             <div class="flex items-center gap-2">
@@ -160,7 +160,7 @@ jobs:
                     <!-- Editor -->
                     <textarea
                         id="editor"
-                        class="flex-1 bg-evolution-dark text-gray-200 p-4 resize-none focus:outline-none editor-font text-sm leading-relaxed"
+                        class="flex-1 bg-evolution-dark text-gray-100 p-4 resize-none focus:outline-none editor-font text-sm leading-relaxed"
                         spellcheck="false"
                         placeholder="Write your EScript code here..."
                     ></textarea>
@@ -169,7 +169,7 @@ jobs:
                     <div id="lintBar" class="glass-effect px-4 py-2 border-t border-evolution-border flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <span id="lintIcon" class="text-evolution-success">●</span>
-                            <span id="lintStatus" class="text-evolution-muted text-sm">No issues</span>
+                            <span id="lintStatus" class="text-gray-300 text-sm">No issues</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span id="compileTime" class="text-xs text-evolution-muted"></span>
@@ -199,20 +199,20 @@ jobs:
                     
                     <!-- Output panels -->
                     <div id="output-ir" class="output-panel flex-1 overflow-auto p-4">
-                        <pre id="irOutput" class="editor-font text-sm text-gray-300 whitespace-pre-wrap">Click "Compile" to see the IR output.</pre>
+                        <pre id="irOutput" class="editor-font text-sm text-gray-200 whitespace-pre-wrap">Click "Compile" to see the IR output.</pre>
                     </div>
                     <div id="output-errors" class="output-panel flex-1 overflow-auto p-4 hidden">
-                        <pre id="errorsOutput" class="editor-font text-sm text-evolution-danger whitespace-pre-wrap">No errors.</pre>
+                        <pre id="errorsOutput" class="editor-font text-sm text-red-400 whitespace-pre-wrap">No errors.</pre>
                     </div>
                     <div id="output-ast" class="output-panel flex-1 overflow-auto p-4 hidden">
-                        <pre id="astOutput" class="editor-font text-sm text-gray-300 whitespace-pre-wrap">Click "Compile" to see the AST.</pre>
+                        <pre id="astOutput" class="editor-font text-sm text-gray-200 whitespace-pre-wrap">Click "Compile" to see the AST.</pre>
                     </div>
                     <div id="output-tokens" class="output-panel flex-1 overflow-auto p-4 hidden">
-                        <pre id="tokensOutput" class="editor-font text-sm text-gray-300 whitespace-pre-wrap">Click "Compile" to see the tokens.</pre>
+                        <pre id="tokensOutput" class="editor-font text-sm text-gray-200 whitespace-pre-wrap">Click "Compile" to see the tokens.</pre>
                     </div>
                     <div id="output-dashboard" class="output-panel flex-1 overflow-auto p-4 hidden">
                         <div id="dashboardContent" class="space-y-4">
-                            <p class="text-evolution-muted text-sm">Compile to see compliance dashboard.</p>
+                            <p class="text-gray-400 text-sm">Compile to see compliance dashboard.</p>
                         </div>
                     </div>
                 </div>
