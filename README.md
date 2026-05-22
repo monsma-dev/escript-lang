@@ -130,6 +130,14 @@ The language is defined. The AST mapping is stable. The IR schema is locked. We 
 
 Read [DESIGN.md](DESIGN.md) — explains self-healing guards, the safety hierarchy, tier-explicit architecture, and the adapter contract with concrete examples.
 
+## Build Your Own Adapter
+
+Read [ADAPTER_API.md](ADAPTER_API.md) — the complete guide to building a framework adapter. Covers every IR object, type mapping tables for 6 languages, a FastAPI walk-through, and the required test matrix.
+
+## IR Schema Versioning
+
+The IR schema follows [Semantic Versioning](https://semver.org/). See [ir-schema/CHANGELOG.md](ir-schema/CHANGELOG.md) for the full changelog, compatibility rules, and deprecation policy.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.

@@ -267,10 +267,59 @@ editor.addEventListener('keydown', (e) => {
     }
 });
 
-// Line count
+// ─── Real-time Linter ────────────────────────────────────────────────────────
+
+const lintIcon = document.getElementById('lintIcon');
+const lintStatus = document.getElementById('lintStatus');
+let lintTimer = null;
+
+function lint() {
+    const source = editor.value;
+    if (!source.trim()) {
+        setLintState('empty', 'No code');
+        return;
+    }
+
+    try {
+        const tokens = window.EScriptCompiler.tokenize(source);
+        const ast = window.EScriptCompiler.parse(tokens);
+        const errors = window.EScriptCompiler.validate(ast);
+
+        if (errors.length === 0) {
+            setLintState('ok', `✓ ${ast.length} declaration${ast.length !== 1 ? 's' : ''} — no issues`);
+        } else {
+            setLintState('error', `${errors.length} issue${errors.length !== 1 ? 's' : ''}: ${errors[0]}`);
+        }
+    } catch (e) {
+        const msg = e.message.replace(/^\[.*?\]\s*/, '');
+        setLintState('error', `Syntax: ${msg}`);
+    }
+}
+
+function setLintState(state, message) {
+    lintStatus.textContent = message;
+    if (state === 'ok') {
+        lintIcon.textContent = '●';
+        lintIcon.className = 'text-green-400';
+        lintStatus.className = 'text-gray-400';
+    } else if (state === 'error') {
+        lintIcon.textContent = '●';
+        lintIcon.className = 'text-red-400';
+        lintStatus.className = 'text-red-400';
+    } else {
+        lintIcon.textContent = '●';
+        lintIcon.className = 'text-gray-600';
+        lintStatus.className = 'text-gray-500';
+    }
+}
+
+// Line count + debounced lint
 editor.addEventListener('input', () => {
     const lines = editor.value.split('\n').length;
     lineCountEl.textContent = `${lines} line${lines !== 1 ? 's' : ''}`;
+
+    clearTimeout(lintTimer);
+    lintTimer = setTimeout(lint, 300);
 });
 
 // ─── Example Loader ──────────────────────────────────────────────────────────
@@ -287,3 +336,4 @@ exampleSelect.addEventListener('change', () => {
 
 editor.value = EXAMPLES['basic-api'];
 editor.dispatchEvent(new Event('input'));
+lint();

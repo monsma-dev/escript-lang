@@ -8,7 +8,8 @@
   "properties": {
     "version": {
       "type": "string",
-      "const": "1.0.0"
+      "pattern": "^1\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version. Major=1 is locked for backwards compatibility. See ir-schema/CHANGELOG.md."
     },
     "source": {
       "type": "string",
@@ -43,6 +44,7 @@
       "items": { "$ref": "#/$defs/island" }
     }
   },
+  "additionalProperties": true,
   "$defs": {
     "module": {
       "type": "object",
