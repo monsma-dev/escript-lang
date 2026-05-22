@@ -1,0 +1,30 @@
+{
+  "name": "tree-sitter-escript",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for EScript — the security-by-design DSL",
+  "main": "grammar.js",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monsma-dev/escript-lang"
+  },
+  "keywords": ["tree-sitter", "escript", "dsl", "security", "fail-closed"],
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.18.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.0"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.escript",
+      "file-types": ["es"],
+      "highlights": "queries/highlights.scm"
+    }
+  ]
+}

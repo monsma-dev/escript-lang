@@ -1,0 +1,9 @@
+node_modules/
+target/
+*.o
+*.so
+*.dylib
+dist/
+build/
+.DS_Store
+Thumbs.db

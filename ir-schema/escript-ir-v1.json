@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://escript-lang.dev/schemas/ir-v1.json",
+  "title": "EScript Intermediate Representation v1",
+  "description": "The stable contract between the EScript compiler and framework adapters.",
+  "type": "object",
+  "required": ["version", "source"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "source": {
+      "type": "string",
+      "description": "Path to the .es source file that produced this IR"
+    },
+    "compiled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/module" }
+    },
+    "routes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/route" }
+    },
+    "services": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/service" }
+    },
+    "dtos": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dto" }
+    },
+    "guards": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/guard" }
+    },
+    "islands": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/island" }
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["package", "theme", "page"] },
+        "version": { "type": "string" },
+        "bootstrapper": { "type": "string" },
+        "priority": { "type": "integer", "minimum": 0 },
+        "requires": { "type": "array", "items": { "type": "string" } },
+        "meta": { "type": "object" }
+      }
+    },
+    "route": {
+      "type": "object",
+      "required": ["method", "path", "tier", "target"],
+      "properties": {
+        "method": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"] },
+        "path": { "type": "string" },
+        "tier": { "type": "string", "enum": ["php", "rust", "elixir", "node"] },
+        "target": {
+          "type": "object",
+          "properties": {
+            "controller": { "type": "string" },
+            "action": { "type": "string" },
+            "namespace": { "type": "string" }
+          }
+        },
+        "auth": { "type": "string", "enum": ["none", "session", "bearer", "api_key"] },
+        "rate_limit": { "type": "string" },
+        "middleware": { "type": "array", "items": { "type": "string" } },
+        "rust_middleware": { "type": "array", "items": { "type": "string" } },
+        "annotations": { "type": "object" },
+        "meta": { "type": "object" }
+      }
+    },
+    "service": {
+      "type": "object",
+      "required": ["name", "tier"],
+      "properties": {
+        "name": { "type": "string" },
+        "tier": { "type": "string", "enum": ["php", "rust", "elixir", "node"] },
+        "namespace": { "type": "string" },
+        "implements": { "type": "array", "items": { "type": "string" } },
+        "fail_mode": { "type": "string", "enum": ["closed", "open"], "default": "closed" },
+        "injects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" }
+            }
+          }
+        },
+        "guards": { "type": "array", "items": { "type": "string" } },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "visibility": { "type": "string", "enum": ["public", "private", "protected"] },
+              "params": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "default": {}
+                  }
+                }
+              },
+              "return_type": {
+                "type": "object",
+                "properties": {
+                  "kind": { "type": "string", "enum": ["simple", "nullable", "array", "result"] },
+                  "type": { "type": "string" },
+                  "ok": { "type": "string" },
+                  "err": { "type": "string" }
+                }
+              },
+              "throws": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "meta": { "type": "object" }
+      }
+    },
+    "dto": {
+      "type": "object",
+      "required": ["name", "fields"],
+      "properties": {
+        "name": { "type": "string" },
+        "namespace": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "nullable": { "type": "boolean", "default": false },
+              "default": {}
+            }
+          }
+        },
+        "fluid": {
+          "type": "object",
+          "properties": {
+            "raw_path": { "type": "string" },
+            "raw_query": { "type": "string" },
+            "rust_action": { "type": "string" },
+            "rust_shortcircuit": { "type": "boolean" }
+          }
+        },
+        "meta": { "type": "object" }
+      }
+    },
+    "guard": {
+      "type": "object",
+      "required": ["name", "tier", "fail_mode"],
+      "properties": {
+        "name": { "type": "string" },
+        "tier": { "type": "string", "enum": ["php", "rust", "elixir", "node"] },
+        "input_type": { "type": "string" },
+        "output_type": { "type": "string" },
+        "fail_mode": { "type": "string", "enum": ["closed", "open"], "default": "closed" },
+        "meta": { "type": "object" }
+      }
+    },
+    "island": {
+      "type": "object",
+      "required": ["name", "dto", "component"],
+      "properties": {
+        "name": { "type": "string" },
+        "dto": { "type": "string" },
+        "component": { "type": "string" },
+        "wasm": { "type": "string" },
+        "fallback": { "type": "string" },
+        "lane": { "type": "string" },
+        "meta": { "type": "object" }
+      }
+    }
+  }
+}

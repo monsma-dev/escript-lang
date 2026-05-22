@@ -1,0 +1,30 @@
+{
+  "$comment": "Example gate rules — copy to your project as escript_gate_rules.json and customize.",
+  "route": {
+    "max_routes_per_file": 200,
+    "max_middleware_per_route": 10,
+    "forbidden_path_patterns": ["/../", "/./", "//", "\\"],
+    "forbidden_controller_prefixes": [],
+    "mutating_methods": ["POST", "PUT", "DELETE", "PATCH"],
+    "require_rate_limit_on_mutating": true,
+    "rate_limit_middleware_contains": ["RateLimit"],
+    "rust_action_separator": "::"
+  },
+  "module": {
+    "valid_types": ["package", "theme", "page"],
+    "max_priority": 999,
+    "require_semver": true,
+    "require_fqcn_bootstrapper": true,
+    "fqcn_separator": "\\"
+  },
+  "dto_fluid": {
+    "raw_path_prefix": "/api/",
+    "dto_name_suffix": "Dto",
+    "require_pascal_case": true,
+    "rust_action_separator": "::"
+  },
+  "service": {
+    "fail_open_requires_unsafe": true,
+    "mixed_type_requires_unsafe": true
+  }
+}
