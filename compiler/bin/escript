@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * EScript Compiler CLI
+ *
+ * Usage:
+ *   php escript compile [source_dir]       Compile .es files to IR
+ *   php escript compile --validate-only    Validate without writing files
+ *   php escript compile --dry-run          Show what would be generated
+ *   php escript compile --watch            Watch for changes and recompile
+ *   php escript compile --output=dir       Override output directory
+ */
+
+require_once __DIR__ . '/../src/bootstrap.php';
+
+use EScript\Compiler\Cli;
+
+$cli = new Cli($argv);
+exit($cli->run());

@@ -120,7 +120,7 @@ The language is defined. The AST mapping is stable. The IR schema is locked. We 
 2. ✅ Tree-sitter grammar (syntax highlighting works)
 3. ✅ IR schema (adapter contract)
 4. ✅ Gate binary (Rust, schema-driven)
-5. 🔄 Reference compiler (PHP-based)
+5. ✅ Reference compiler (PHP-based, `compiler/bin/escript compile`)
 6. 🔄 Playground (web demo)
 7. 📋 Community adapters
 
