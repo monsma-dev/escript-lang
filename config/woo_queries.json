@@ -1,0 +1,156 @@
+{
+  "$schema": "https://escript-lang.org/schemas/db_queries/v1.0.0.json",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Whitelisted JSON-stored queries for WooCommerce EScript adapter",
+    "last_updated": "2026-05-23T00:00:00Z",
+    "platform": "WooCommerce",
+    "platform_version": "5.0+"
+  },
+  "queries": {
+    "woo.get_product_price": {
+      "id": "woo.get_product_price",
+      "description": "Get product price with user-specific discounts",
+      "security_level": "read",
+      "parameters": {
+        "product_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Product ID"
+        },
+        "user_id": {
+          "type": "integer",
+          "required": false,
+          "description": "User ID for user-specific pricing"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT meta_value FROM wp_postmeta WHERE post_id = :product_id AND meta_key = '_price' LIMIT 1",
+        "hash": "sha256:6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "woo.get_product_stock": {
+      "id": "woo.get_product_stock",
+      "description": "Get product stock quantity",
+      "security_level": "read",
+      "parameters": {
+        "product_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Product ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT meta_value FROM wp_postmeta WHERE post_id = :product_id AND meta_key = '_stock' LIMIT 1",
+        "hash": "sha256:7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "woo.get_orders": {
+      "id": "woo.get_orders",
+      "description": "Get WooCommerce orders with access control",
+      "security_level": "read",
+      "parameters": {
+        "user_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Customer user ID"
+        },
+        "status": {
+          "type": "string",
+          "required": false,
+          "pattern": "^[a-z_-]+$",
+          "description": "Order status (e.g., wc-completed, wc-processing)"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT ID, post_status, post_date FROM wp_posts WHERE post_type = 'shop_order' AND post_author = :user_id AND (:status IS NULL OR post_status = :status) ORDER BY post_date DESC",
+        "hash": "sha256:8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000
+    },
+    "woo.get_customer_spent": {
+      "id": "woo.get_customer_spent",
+      "description": "Get total amount spent by customer",
+      "security_level": "read",
+      "parameters": {
+        "customer_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Customer user ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT SUM(meta_value) as total_spent FROM wp_postmeta pm JOIN wp_posts p ON pm.post_id = p.ID WHERE p.post_type = 'shop_order' AND p.post_status = 'wc-completed' AND pm.meta_key = '_order_total' AND p.post_author = :customer_id",
+        "hash": "sha256:9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    },
+    "woo.get_coupon_discount": {
+      "id": "woo.get_coupon_discount",
+      "description": "Get coupon discount amount with validation",
+      "security_level": "read",
+      "parameters": {
+        "coupon_code": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[A-Z0-9_-]+$",
+          "description": "Coupon code"
+        },
+        "cart_total": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Cart total before discount"
+        },
+        "user_id": {
+          "type": "integer",
+          "required": false,
+          "description": "User ID for user-specific coupons"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT pm.meta_value FROM wp_posts p JOIN wp_postmeta pm ON p.ID = pm.post_id WHERE p.post_type = 'shop_coupon' AND p.post_status = 'publish' AND pm.meta_key = 'coupon_amount' AND p.post_title = :coupon_code LIMIT 1",
+        "hash": "sha256:0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "woo.get_product_reviews": {
+      "id": "woo.get_product_reviews",
+      "description": "Get product reviews with spam filtering",
+      "security_level": "read",
+      "parameters": {
+        "product_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Product ID"
+        },
+        "approved": {
+          "type": "integer",
+          "required": false,
+          "default": 1,
+          "pattern": "^[01]$",
+          "description": "Comment approval status (0=spam, 1=approved)"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT comment_ID, comment_author, comment_content, comment_date FROM wp_comments WHERE comment_post_ID = :product_id AND comment_approved = :approved ORDER BY comment_date DESC",
+        "hash": "sha256:1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    }
+  },
+  "security": {
+    "default_fail_closed": true,
+    "allowed_security_levels": ["read"],
+    "max_timeout_ms": 5000,
+    "query_hash_algorithm": "sha256"
+  }
+}

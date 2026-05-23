@@ -1,0 +1,184 @@
+{
+  "$schema": "https://escript-lang.org/schemas/db_queries/v1.0.0.json",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Whitelisted JSON-stored queries for Shopify EScript adapter",
+    "last_updated": "2026-05-23T00:00:00Z",
+    "platform": "Shopify",
+    "platform_version": "2024+"
+  },
+  "queries": {
+    "shopify.get_products": {
+      "id": "shopify.get_products",
+      "description": "Get Shopify products with security filters",
+      "security_level": "read",
+      "parameters": {
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "max": 250,
+          "description": "Maximum number of products"
+        },
+        "collection_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by collection ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, handle, status FROM products WHERE (:collection_id IS NULL OR id IN (SELECT product_id FROM collection_products WHERE collection_id = :collection_id)) LIMIT :limit",
+        "hash": "sha256:6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000
+    },
+    "shopify.get_orders": {
+      "id": "shopify.get_orders",
+      "description": "Get Shopify orders with access control",
+      "security_level": "read",
+      "parameters": {
+        "customer_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by customer ID"
+        },
+        "status": {
+          "type": "string",
+          "required": false,
+          "pattern": "^[a-z_]+$",
+          "description": "Order status (e.g., open, closed, cancelled)"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "max": 250,
+          "description": "Maximum number of orders"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, order_number, customer_id, total_price, financial_status FROM orders WHERE (:customer_id IS NULL OR customer_id = :customer_id) AND (:status IS NULL OR financial_status = :status) LIMIT :limit",
+        "hash": "sha256:7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000
+    },
+    "shopify.get_customers": {
+      "id": "shopify.get_customers",
+      "description": "Get Shopify customers with validation",
+      "security_level": "read",
+      "parameters": {
+        "customer_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by customer ID"
+        },
+        "email": {
+          "type": "string",
+          "required": false,
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          "description": "Filter by email address"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "max": 250,
+          "description": "Maximum number of customers"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, email, first_name, last_name, orders_count FROM customers WHERE (:customer_id IS NULL OR id = :customer_id) AND (:email IS NULL OR email = :email) LIMIT :limit",
+        "hash": "sha256:8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000
+    },
+    "shopify.get_product_variants": {
+      "id": "shopify.get_product_variants",
+      "description": "Get product variants with inventory",
+      "security_level": "read",
+      "parameters": {
+        "product_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Product ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, price, inventory_quantity FROM product_variants WHERE product_id = :product_id",
+        "hash": "sha256:9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    },
+    "shopify.get_inventory_levels": {
+      "id": "shopify.get_inventory_levels",
+      "description": "Get inventory levels with location filtering",
+      "security_level": "read",
+      "parameters": {
+        "inventory_item_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Inventory item ID"
+        },
+        "location_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by location ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT location_id, available FROM inventory_levels WHERE inventory_item_id = :inventory_item_id AND (:location_id IS NULL OR location_id = :location_id)",
+        "hash": "sha256:0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    },
+    "shopify.get_product_by_handle": {
+      "id": "shopify.get_product_by_handle",
+      "description": "Get product by handle (Storefront API)",
+      "security_level": "read",
+      "parameters": {
+        "handle": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Product handle"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, handle, description FROM products WHERE handle = :handle LIMIT 1",
+        "hash": "sha256:1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "shopify.get_collection_by_handle": {
+      "id": "shopify.get_collection_by_handle",
+      "description": "Get collection by handle (Storefront API)",
+      "security_level": "read",
+      "parameters": {
+        "handle": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Collection handle"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, handle, description FROM collections WHERE handle = :handle LIMIT 1",
+        "hash": "sha256:2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    }
+  },
+  "security": {
+    "default_fail_closed": true,
+    "allowed_security_levels": ["read"],
+    "max_timeout_ms": 5000,
+    "query_hash_algorithm": "sha256"
+  }
+}

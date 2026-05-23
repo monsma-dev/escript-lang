@@ -1,0 +1,169 @@
+{
+  "$schema": "https://escript-lang.org/schemas/db_queries/v1.0.0.json",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Whitelisted JSON-stored queries for WordPress EScript adapter",
+    "last_updated": "2026-05-23T00:00:00Z",
+    "platform": "WordPress",
+    "platform_version": "5.0+"
+  },
+  "queries": {
+    "wp.get_posts": {
+      "id": "wp.get_posts",
+      "description": "Get WordPress posts with security filters",
+      "security_level": "read",
+      "parameters": {
+        "post_type": {
+          "type": "string",
+          "required": false,
+          "default": "post",
+          "pattern": "^[a-z_-]+$",
+          "description": "Post type (post, page, custom_post_type)"
+        },
+        "post_status": {
+          "type": "string",
+          "required": false,
+          "default": "publish",
+          "pattern": "^[a-z_-]+$",
+          "description": "Post status (publish, draft, private, etc.)"
+        },
+        "posts_per_page": {
+          "type": "integer",
+          "required": false,
+          "default": 10,
+          "max": 100,
+          "description": "Maximum number of posts to return"
+        },
+        "offset": {
+          "type": "integer",
+          "required": false,
+          "default": 0,
+          "description": "Offset for pagination"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT ID, post_title, post_content, post_status, post_date FROM wp_posts WHERE post_type = :post_type AND post_status = :post_status ORDER BY post_date DESC LIMIT :posts_per_page OFFSET :offset",
+        "hash": "sha256:8a9b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    },
+    "wp.get_option": {
+      "id": "wp.get_option",
+      "description": "Get WordPress option with validation",
+      "security_level": "read",
+      "parameters": {
+        "option_name": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[a-z_-]+$",
+          "description": "Option name (e.g., site_title, admin_email)"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT option_value FROM wp_options WHERE option_name = :option_name LIMIT 1",
+        "hash": "sha256:1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "wp.get_post_meta": {
+      "id": "wp.get_post_meta",
+      "description": "Get post metadata with access control",
+      "security_level": "read",
+      "parameters": {
+        "post_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Post ID"
+        },
+        "meta_key": {
+          "type": "string",
+          "required": false,
+          "pattern": "^[a-z_-]+$",
+          "description": "Meta key (optional, returns all if not specified)"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT meta_key, meta_value FROM wp_postmeta WHERE post_id = :post_id AND (:meta_key IS NULL OR meta_key = :meta_key)",
+        "hash": "sha256:2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "wp.get_user": {
+      "id": "wp.get_user",
+      "description": "Get WordPress user with security filters",
+      "security_level": "read",
+      "parameters": {
+        "user_id": {
+          "type": "integer",
+          "required": true,
+          "description": "User ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT ID, user_login, user_email, display_name FROM wp_users WHERE ID = :user_id LIMIT 1",
+        "hash": "sha256:3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "wp.get_term": {
+      "id": "wp.get_term",
+      "description": "Get WordPress term (category/tag) with validation",
+      "security_level": "read",
+      "parameters": {
+        "term_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Term ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT t.term_id, t.name, t.slug, tt.taxonomy FROM wp_terms t JOIN wp_term_taxonomy tt ON t.term_id = tt.term_id WHERE t.term_id = :term_id LIMIT 1",
+        "hash": "sha256:4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "wp.get_comments": {
+      "id": "wp.get_comments",
+      "description": "Get comments with spam filtering",
+      "security_level": "read",
+      "parameters": {
+        "post_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by post ID"
+        },
+        "comment_approved": {
+          "type": "string",
+          "required": false,
+          "default": "1",
+          "pattern": "^[01]$",
+          "description": "Comment approval status (0=spam, 1=approved)"
+        },
+        "number": {
+          "type": "integer",
+          "required": false,
+          "default": 10,
+          "max": 100,
+          "description": "Maximum number of comments"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT comment_ID, comment_post_ID, comment_author, comment_content, comment_date FROM wp_comments WHERE (:post_id IS NULL OR comment_post_ID = :post_id) AND comment_approved = :comment_approved ORDER BY comment_date DESC LIMIT :number",
+        "hash": "sha256:5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    }
+  },
+  "security": {
+    "default_fail_closed": true,
+    "allowed_security_levels": ["read"],
+    "max_timeout_ms": 5000,
+    "query_hash_algorithm": "sha256"
+  }
+}

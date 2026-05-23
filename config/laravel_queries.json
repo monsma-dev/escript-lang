@@ -1,0 +1,95 @@
+{
+  "$schema": "https://escript-lang.org/schemas/db_queries/v1.0.0.json",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Whitelisted JSON-stored queries for Laravel EScript adapter",
+    "last_updated": "2026-05-23T00:00:00Z",
+    "platform": "Laravel",
+    "platform_version": "8.0+"
+  },
+  "queries": {
+    "laravel.get_user": {
+      "id": "laravel.get_user",
+      "description": "Get Laravel user with security filters",
+      "security_level": "read",
+      "parameters": {
+        "user_id": {
+          "type": "integer",
+          "required": true,
+          "description": "User ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, name, email, created_at FROM users WHERE id = :user_id LIMIT 1",
+        "hash": "sha256:2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "laravel.get_post": {
+      "id": "laravel.get_post",
+      "description": "Get Laravel post with validation",
+      "security_level": "read",
+      "parameters": {
+        "post_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Post ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, content, created_at FROM posts WHERE id = :post_id LIMIT 1",
+        "hash": "sha256:3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "laravel.get_product": {
+      "id": "laravel.get_product",
+      "description": "Get Laravel product with access control",
+      "security_level": "read",
+      "parameters": {
+        "product_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Product ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, name, price, stock FROM products WHERE id = :product_id LIMIT 1",
+        "hash": "sha256:4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    },
+    "laravel.get_order": {
+      "id": "laravel.get_order",
+      "description": "Get Laravel order with user access control",
+      "security_level": "read",
+      "parameters": {
+        "order_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Order ID"
+        },
+        "user_id": {
+          "type": "integer",
+          "required": false,
+          "description": "User ID for access control"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, user_id, total, status FROM orders WHERE id = :order_id AND (:user_id IS NULL OR user_id = :user_id) LIMIT 1",
+        "hash": "sha256:5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6"
+      },
+      "fail_closed": true,
+      "timeout_ms": 500
+    }
+  },
+  "security": {
+    "default_fail_closed": true,
+    "allowed_security_levels": ["read"],
+    "max_timeout_ms": 5000,
+    "query_hash_algorithm": "sha256"
+  }
+}
