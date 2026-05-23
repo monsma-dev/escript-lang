@@ -37,10 +37,99 @@ jobs:
         cp -r playground/* dist/
         mkdir -p dist/blog
         cp -r content/blog/* dist/blog/
-        # Create blog index.html if it doesn't exist
-        if [ ! -f "dist/blog/index.html" ]; then
-          echo "<!DOCTYPE html><html><head><title>EScript Blog</title></head><body><h1>EScript Blog</h1><p>Content-as-Code blog for EScript promotion.</p></body></html>" > dist/blog/index.html
-        fi
+        # Create styled blog index.html
+        cat > dist/blog/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>EScript Blog - Content-as-Code for Security-First Development</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        </head>
+        <body class="bg-gray-900 text-gray-100 min-h-screen">
+            <nav class="bg-gray-800 border-b border-gray-700">
+                <div class="max-w-6xl mx-auto px-4 py-4">
+                    <div class="flex items-center justify-between">
+                        <a href="/" class="text-2xl font-bold text-blue-400 hover:text-blue-300 transition">
+                            <i class="fas fa-code mr-2"></i>EScript
+                        </a>
+                        <div class="flex items-center space-x-6">
+                            <a href="/" class="text-gray-300 hover:text-white transition">Playground</a>
+                            <a href="/blog/" class="text-blue-400 font-semibold">Blog</a>
+                            <a href="https://github.com/monsma-dev/escript-lang" class="text-gray-300 hover:text-white transition">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="max-w-6xl mx-auto px-4 py-12">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                        EScript Blog
+                    </h1>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                        Content-as-Code blog for security-first development and fail-closed design principles
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-shield-alt text-blue-400 text-2xl mr-3"></i>
+                            <span class="text-sm text-gray-400">Technical</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Fail-Closed Security</h3>
+                        <p class="text-gray-400 text-sm">How EScript enforces security-by-design by making insecure code uncompilable</p>
+                    </div>
+
+                    <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-robot text-purple-400 text-2xl mr-3"></i>
+                            <span class="text-sm text-gray-400">Integration</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Evolution Framework</h3>
+                        <p class="text-gray-400 text-sm">Integrating EScript with the Evolution Framework for autonomous systems</p>
+                    </div>
+
+                    <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-green-500 transition">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-code-branch text-green-400 text-2xl mr-3"></i>
+                            <span class="text-sm text-gray-400">Development</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Content-as-Code</h3>
+                        <p class="text-gray-400 text-sm">Managing blog content as code with automated publishing workflows</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 bg-gray-800 rounded-lg p-8 border border-gray-700">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-400">About EScript</h2>
+                    <p class="text-gray-300 mb-4">
+                        EScript is a framework-agnostic DSL that enforces security-by-design and compiles to any polyglot stack through pluggable adapters. 
+                        It makes insecure code uncompilable by default, ensuring that security is built into the development process from the start.
+                    </p>
+                    <div class="flex flex-wrap gap-4 mt-6">
+                        <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                            <i class="fas fa-play mr-2"></i>Try Playground
+                        </a>
+                        <a href="https://github.com/monsma-dev/escript-lang" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
+                            <i class="fab fa-github mr-2"></i>View on GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="bg-gray-800 border-t border-gray-700 mt-12">
+                <div class="max-w-6xl mx-auto px-4 py-6 text-center text-gray-400">
+                    <p>&copy; 2026 EScript. Content-as-Code for security-first development.</p>
+                </div>
+            </footer>
+        </body>
+        </html>
+        EOF
     
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
