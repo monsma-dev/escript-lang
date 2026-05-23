@@ -227,6 +227,10 @@ guard SpendingGuard {
 }
 ```
 
+**Reference library:** See `stdlib/fail_closed.es` for reusable DTO and guard patterns (rate limits, spending ceilings, reactive `@trigger` / `@action` / `@condition` examples).
+
+**Compliance IR:** Pipelines that must ship with at least one guard can validate emitted JSON against `ir-schema/compliance.schema.json` (composed on top of `escript-ir-v1.json`).
+
 ---
 
 ## Compile-Time Enforcements

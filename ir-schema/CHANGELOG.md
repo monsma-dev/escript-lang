@@ -36,6 +36,13 @@ The IR schema version (`"version": "1.x.y"`) follows strict compatibility rules:
 
 ## Changelog
 
+### v1.0.1 — 2026-05-23
+
+**Additive (non-breaking).**
+
+- Document optional `dto` on `route` objects (already emitted by reference compilers when route options include `dto`).
+- Add `ir-schema/compliance.schema.json`, a composed schema for IR documents that must include at least one guard (compliance / gate tooling).
+
 ### v1.0.0 — 2026-05-23
 
 **Initial stable release.** Locked schema for adapter development.
