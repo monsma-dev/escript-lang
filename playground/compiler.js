@@ -446,12 +446,19 @@ function validate(nodes) {
             }
         }
         if (node.kind === 'guard') {
+            if (!node.tier) errors.push(`Line ${node.line}: Guard '${node.name}' must declare tier: @php | @rust | @elixir | @node`);
+            if (!node.input) errors.push(`Line ${node.line}: Guard '${node.name}' must declare input: DtoName`);
+            if (!node.output) errors.push(`Line ${node.line}: Guard '${node.name}' must declare output: DtoName`);
             if (node.fail_mode === 'open') {
                 const hasUnsafe = (node.annotations || []).some(a => a.name === 'unsafe');
                 if (!hasUnsafe) errors.push(`Line ${node.line}: Guard '${node.name}' fail_mode 'open' requires @unsafe`);
             }
         }
         if (node.kind === 'service') {
+            const anns = node.annotations || [];
+            if (anns.some(a => a.name === 'fail_open') && !anns.some(a => a.name === 'unsafe')) {
+                errors.push(`Line ${node.line}: Service '${node.name}' uses @fail_open and must include @unsafe("reason")`);
+            }
             for (const g of node.guards || []) {
                 if (!guardNames.includes(g)) errors.push(`Line ${node.line}: Undefined guard '${g}'`);
             }
@@ -493,6 +500,7 @@ function emitIR(nodes, source) {
             if (n.tier === 'rust') r.target.action = n.target.controller;
             else { r.target.controller = n.target.controller; if (n.target.action) r.target.action = n.target.action; }
             if (n.options?.middleware) r.middleware = n.options.middleware;
+            if (n.options?.rust_middlewares) r.rust_middleware = n.options.rust_middlewares;
             if (n.options?.dto) r.dto = n.options.dto;
             const anMap = {};
             for (const a of n.annotations || []) anMap[a.name] = a.args;
@@ -550,18 +558,29 @@ function emitTypeRef(type) {
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
-window.EScriptCompiler = {
+function nowMs() {
+    return typeof performance !== 'undefined' ? performance.now() : Date.now();
+}
+
+const EScriptCompilerApi = {
     tokenize,
     parse,
     validate,
     emitIR,
     compile(source, filename = '<playground>') {
-        const start = performance.now();
+        const start = nowMs();
         const tokens = tokenize(source);
         const ast = parse(tokens);
         const errors = validate(ast);
         const ir = errors.length === 0 ? emitIR(ast, filename) : null;
-        const elapsed = (performance.now() - start).toFixed(1);
+        const elapsed = (nowMs() - start).toFixed(1);
         return { tokens, ast, errors, ir, elapsed };
     },
 };
+
+if (typeof window !== 'undefined') {
+    window.EScriptCompiler = EScriptCompilerApi;
+}
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = EScriptCompilerApi;
+}

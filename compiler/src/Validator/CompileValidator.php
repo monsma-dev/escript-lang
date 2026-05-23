@@ -102,13 +102,30 @@ final class CompileValidator
 
         // Rule: service must have tier annotation
         $hasTier = false;
+        $hasFailOpen = false;
         foreach ($annotations as $ann) {
             if ($ann['name'] === 'tier') {
                 $hasTier = true;
             }
+            if ($ann['name'] === 'fail_open') {
+                $hasFailOpen = true;
+            }
         }
         if (!$hasTier) {
             $this->errors[] = "Line {$line}: Service '{$name}' must declare @tier(php|rust|elixir|node).";
+        }
+
+        if ($hasFailOpen) {
+            $hasUnsafeAck = false;
+            foreach ($annotations as $ann) {
+                if ($ann['name'] === 'unsafe') {
+                    $hasUnsafeAck = true;
+                    break;
+                }
+            }
+            if (!$hasUnsafeAck) {
+                $this->errors[] = "Line {$line}: Service '{$name}' uses @fail_open and must include @unsafe(\"reason\").";
+            }
         }
 
         // Rule: guard references must exist

@@ -4,6 +4,8 @@
 
 The language specification is stable. The IR schema is locked. We are actively building the reference compiler and seeking adapter implementations for popular frameworks.
 
+From the repository root, run `npm test` to execute the Node-based regression tests for the playground compiler (`playground/compiler.js`). When the `php` executable is on your `PATH`, those tests also validate the `examples/` and `stdlib/` trees with the reference CLI under `compiler/`.
+
 ## How to Contribute
 
 ### 1. Write an Adapter

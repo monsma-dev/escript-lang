@@ -76,6 +76,7 @@
         },
         "auth": { "type": "string", "enum": ["none", "session", "bearer", "api_key"] },
         "rate_limit": { "type": "string" },
+        "dto": { "type": "string", "description": "Request/response DTO bound to this route (from route options or adapter metadata)" },
         "middleware": { "type": "array", "items": { "type": "string" } },
         "rust_middleware": { "type": "array", "items": { "type": "string" } },
         "annotations": { "type": "object" },

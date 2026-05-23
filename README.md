@@ -88,8 +88,9 @@ escript compile --validate-only
 ```
 escript-lang/
 ├── spec/                    # Language specification (EBNF grammar)
+├── stdlib/                  # Canonical `.es` snippets (fail-closed guard patterns)
 ├── tree-sitter-escript/     # Tree-sitter grammar (syntax highlighting)
-├── ir-schema/               # IR JSON Schema (adapter contract)
+├── ir-schema/               # IR JSON Schema (adapter contract; includes compliance.schema.json)
 ├── gate/                    # Rust gate binary (artifact validator)
 ├── adapters/
 │   ├── evolution/           # Reference adapter

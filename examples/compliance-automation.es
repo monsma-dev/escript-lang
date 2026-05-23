@@ -35,6 +35,28 @@ dto AnalysisPoolStatus {
     avg_response_ms: float;
 }
 
+// Types referenced by SpendingCeilingGuard and service methods (see stdlib/fail_closed.es).
+dto SpendRequest {
+    account_id: string;
+    amount: float;
+    currency: string;
+    requested_by: string;
+    correlation_id: string;
+}
+
+dto SpendDecision {
+    allowed: bool;
+    reason: string;
+    ceiling: float;
+    evaluated_at: string;
+}
+
+dto DispatchError {
+    code: string;
+    message: string;
+    retryable: bool;
+}
+
 // ─── Guards: the immutable enforcement layer ────────────────────────────────
 
 // LayerViolationGuard: Detects architectural boundary crossings.
