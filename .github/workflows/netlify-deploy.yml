@@ -1,0 +1,52 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'playground/**', 'content/blog/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'playground/**', 'content/blog/**' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Build site
+      run: |
+        mkdir -p dist
+        cp -r playground/* dist/
+        mkdir -p dist/blog
+        cp -r content/blog/* dist/blog/
+        
+        # Create a proper index.html for root
+        cat > dist/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>EScript Playground & Documentation</title>
+            <meta http-equiv="refresh" content="0; url=/">
+        </head>
+        <body>
+            <p>Redirecting to EScript Playground...</p>
+        </body>
+        </html>
+        EOF
+    
+    - name: Deploy to Netlify
+      uses: netlify/actions/cli@master
+      with:
+        args: deploy --prod --dir=dist
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
