@@ -37,6 +37,10 @@ jobs:
         cp -r playground/* dist/
         mkdir -p dist/blog
         cp -r content/blog/* dist/blog/
+        # Create blog index.html if it doesn't exist
+        if [ ! -f "dist/blog/index.html" ]; then
+          echo "<!DOCTYPE html><html><head><title>EScript Blog</title></head><body><h1>EScript Blog</h1><p>Content-as-Code blog for EScript promotion.</p></body></html>" > dist/blog/index.html
+        fi
     
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
