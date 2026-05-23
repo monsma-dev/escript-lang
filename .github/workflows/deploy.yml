@@ -3,7 +3,7 @@ name: Deploy EScript Playground to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths: [ 'playground/**', 'content/blog/**' ]
+    paths: [ 'playground/**', 'content/blog/**', '.github/workflows/deploy.yml' ]
   pull_request:
     branches: [ main ]
     paths: [ 'playground/**', 'content/blog/**' ]
