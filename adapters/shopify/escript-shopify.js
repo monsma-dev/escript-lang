@@ -10,7 +10,7 @@ const http2 = require('http2');
 class EScriptShopifyAdapter {
     constructor(config = {}) {
         this.serviceUrl = config.serviceUrl || process.env.RUST_QUERY_SERVICE_URL || 'http://localhost:8080';
-        this.configPath = config.configPath || './config/shopify_queries.json';
+        this.configPath = config.configPath || __dirname + '/../../config/shopify_queries.json';
         this.enabled = config.enabled !== false;
         this.failClosed = config.failClosed !== false;
         
