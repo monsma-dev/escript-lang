@@ -1,0 +1,174 @@
+{
+  "$schema": "https://escript-lang.org/schemas/db_queries/v1.0.0.json",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Whitelisted JSON-stored queries for EScript DatabaseQueryGuard",
+    "last_updated": "2026-05-23T00:00:00Z",
+    "rust_service_version": "1.0.0"
+  },
+  "queries": {
+    "marketplace.get_listings": {
+      "id": "marketplace.get_listings",
+      "description": "Retrieve marketplace listings with optional filters",
+      "security_level": "read",
+      "parameters": {
+        "category_id": {
+          "type": "integer",
+          "required": false,
+          "description": "Filter by category ID"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "max": 1000,
+          "description": "Maximum number of results"
+        },
+        "offset": {
+          "type": "integer",
+          "required": false,
+          "default": 0,
+          "description": "Result offset for pagination"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT id, title, price, category_id, created_at FROM listings WHERE (:category_id IS NULL OR category_id = :category_id) ORDER BY created_at DESC LIMIT :limit OFFSET :offset",
+        "hash": "sha256:abc123def456"
+      },
+      "fail_closed": true,
+      "timeout_ms": 5000
+    },
+    "marketplace.get_listing_by_id": {
+      "id": "marketplace.get_listing_by_id",
+      "description": "Retrieve a single marketplace listing by ID",
+      "security_level": "read",
+      "parameters": {
+        "id": {
+          "type": "integer",
+          "required": true,
+          "description": "Listing ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT * FROM listings WHERE id = :id",
+        "hash": "sha256:xyz789abc123"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000
+    },
+    "ai.get_agent_state": {
+      "id": "ai.get_agent_state",
+      "description": "Retrieve AI agent state from ai_state table",
+      "security_level": "read",
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[a-z_]+$",
+          "description": "State namespace (e.g., 'agent_registry', 'idempotency')"
+        },
+        "key": {
+          "type": "string",
+          "required": false,
+          "description": "Optional key for specific state entry"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT key, value, expires_at FROM ai_state WHERE namespace = :namespace AND (:key IS NULL OR key = :key) AND (expires_at IS NULL OR expires_at > NOW())",
+        "hash": "sha256:def456ghi789"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000
+    },
+    "ai.set_agent_state": {
+      "id": "ai.set_agent_state",
+      "description": "Set AI agent state in ai_state table",
+      "security_level": "write",
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[a-z_]+$",
+          "description": "State namespace"
+        },
+        "key": {
+          "type": "string",
+          "required": true,
+          "description": "State key"
+        },
+        "value": {
+          "type": "string",
+          "required": true,
+          "description": "JSON-encoded value"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "required": false,
+          "default": 3600,
+          "description": "Time-to-live in seconds"
+        }
+      },
+      "query_template": {
+        "sql": "INSERT INTO ai_state (namespace, key, value, expires_at) VALUES (:namespace, :key, :value, DATE_ADD(NOW(), INTERVAL :ttl_seconds SECOND)) ON DUPLICATE KEY UPDATE value = :value, expires_at = DATE_ADD(NOW(), INTERVAL :ttl_seconds SECOND)",
+        "hash": "sha256:jkl012mno345"
+      },
+      "fail_closed": true,
+      "timeout_ms": 3000
+    },
+    "auction.get_current_bid": {
+      "id": "auction.get_current_bid",
+      "description": "Get current high bid for an auction",
+      "security_level": "read",
+      "parameters": {
+        "listing_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Listing ID"
+        }
+      },
+      "query_template": {
+        "sql": "SELECT current_high_bid, bid_history FROM auctions WHERE listing_id = :listing_id FOR UPDATE",
+        "hash": "sha256:pqr678stu901"
+      },
+      "fail_closed": true,
+      "timeout_ms": 1000,
+      "requires_transaction": true
+    },
+    "auction.place_bid": {
+      "id": "auction.place_bid",
+      "description": "Place a bid on an auction",
+      "security_level": "write",
+      "parameters": {
+        "listing_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Listing ID"
+        },
+        "bid_amount": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Bid amount"
+        },
+        "bidder_id": {
+          "type": "integer",
+          "required": true,
+          "description": "Bidder user ID"
+        }
+      },
+      "query_template": {
+        "sql": "UPDATE auctions SET current_high_bid = :bid_amount, bid_history = JSON_ARRAY_APPEND(COALESCE(bid_history, '[]'), '$', JSON_OBJECT('amount', :bid_amount, 'bidder_id', :bidder_id, 'timestamp', NOW())) WHERE listing_id = :listing_id AND current_high_bid < :bid_amount",
+        "hash": "sha256:vwx234yza567"
+      },
+      "fail_closed": true,
+      "timeout_ms": 2000,
+      "requires_transaction": true
+    }
+  },
+  "security": {
+    "default_fail_closed": true,
+    "allowed_security_levels": ["read", "write"],
+    "max_timeout_ms": 10000,
+    "query_hash_algorithm": "sha256"
+  }
+}
