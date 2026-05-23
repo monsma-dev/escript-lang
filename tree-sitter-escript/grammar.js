@@ -183,6 +183,7 @@ module.exports = grammar({
 
     // ─── Guard ────────────────────────────────────────────────
     guard_decl: $ => seq(
+      repeat($.annotation),
       'guard',
       $.identifier,
       '{',

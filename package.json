@@ -1,0 +1,11 @@
+{
+  "name": "escript-lang",
+  "private": true,
+  "description": "EScript language workspace (playground compiler tests, tooling)",
+  "scripts": {
+    "test": "node --test tests/*.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
