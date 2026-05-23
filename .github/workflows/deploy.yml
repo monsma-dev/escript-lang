@@ -52,12 +52,12 @@ jobs:
             <nav class="bg-gray-800 border-b border-gray-700">
                 <div class="max-w-6xl mx-auto px-4 py-4">
                     <div class="flex items-center justify-between">
-                        <a href="/" class="text-2xl font-bold text-blue-400 hover:text-blue-300 transition">
+                        <a href="/escript-lang/" class="text-2xl font-bold text-blue-400 hover:text-blue-300 transition">
                             <i class="fas fa-code mr-2"></i>EScript
                         </a>
                         <div class="flex items-center space-x-6">
-                            <a href="/" class="text-gray-300 hover:text-white transition">Playground</a>
-                            <a href="/blog/" class="text-blue-400 font-semibold">Blog</a>
+                            <a href="/escript-lang/" class="text-gray-300 hover:text-white transition">Playground</a>
+                            <a href="/escript-lang/blog/" class="text-blue-400 font-semibold">Blog</a>
                             <a href="https://github.com/monsma-dev/escript-lang" class="text-gray-300 hover:text-white transition">
                                 <i class="fab fa-github text-xl"></i>
                             </a>
@@ -112,7 +112,7 @@ jobs:
                         It makes insecure code uncompilable by default, ensuring that security is built into the development process from the start.
                     </p>
                     <div class="flex flex-wrap gap-4 mt-6">
-                        <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                        <a href="/escript-lang/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
                             <i class="fas fa-play mr-2"></i>Try Playground
                         </a>
                         <a href="https://github.com/monsma-dev/escript-lang" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
