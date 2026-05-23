@@ -33,7 +33,7 @@
       },
       "query_template": {
         "sql": "SELECT id, title, price, category_id, created_at FROM listings WHERE (:category_id IS NULL OR category_id = :category_id) ORDER BY created_at DESC LIMIT :limit OFFSET :offset",
-        "hash": "sha256:abc123def456"
+        "hash": "sha256:9124c61e80ba35202d3c44be0bb3d7ba88de37676dbbbd02e030e58704039e1a"
       },
       "fail_closed": true,
       "timeout_ms": 5000
@@ -51,7 +51,7 @@
       },
       "query_template": {
         "sql": "SELECT * FROM listings WHERE id = :id",
-        "hash": "sha256:xyz789abc123"
+        "hash": "sha256:a2047dd9f7206c0d9dc0108ea9e47aa312326bcdaf2478c15954b3b231e0de00"
       },
       "fail_closed": true,
       "timeout_ms": 1000
@@ -75,7 +75,7 @@
       },
       "query_template": {
         "sql": "SELECT key, value, expires_at FROM ai_state WHERE namespace = :namespace AND (:key IS NULL OR key = :key) AND (expires_at IS NULL OR expires_at > NOW())",
-        "hash": "sha256:def456ghi789"
+        "hash": "sha256:0b29a1dd175dc565f539c54ca727b979f32998e4d0a5a2f901cd374e298a9182"
       },
       "fail_closed": true,
       "timeout_ms": 2000
@@ -110,7 +110,7 @@
       },
       "query_template": {
         "sql": "INSERT INTO ai_state (namespace, key, value, expires_at) VALUES (:namespace, :key, :value, DATE_ADD(NOW(), INTERVAL :ttl_seconds SECOND)) ON DUPLICATE KEY UPDATE value = :value, expires_at = DATE_ADD(NOW(), INTERVAL :ttl_seconds SECOND)",
-        "hash": "sha256:jkl012mno345"
+        "hash": "sha256:b639a6b334fff20a7740a7fb26966e12f7dac7814b15261a0c3fe335877c984f"
       },
       "fail_closed": true,
       "timeout_ms": 3000
@@ -128,7 +128,7 @@
       },
       "query_template": {
         "sql": "SELECT current_high_bid, bid_history FROM auctions WHERE listing_id = :listing_id FOR UPDATE",
-        "hash": "sha256:pqr678stu901"
+        "hash": "sha256:0c838b31736fe9decdfe497d67a474de662dc4028def3e5f4344b1005342cd01"
       },
       "fail_closed": true,
       "timeout_ms": 1000,
@@ -157,8 +157,8 @@
         }
       },
       "query_template": {
-        "sql": "UPDATE auctions SET current_high_bid = :bid_amount, bid_history = JSON_ARRAY_APPEND(COALESCE(bid_history, '[]'), '$', JSON_OBJECT('amount', :bid_amount, 'bidder_id', :bidder_id, 'timestamp', NOW())) WHERE listing_id = :listing_id AND current_high_bid < :bid_amount",
-        "hash": "sha256:vwx234yza567"
+        "sql": "UPDATE auctions SET current_high_bid = :bid_amount, bid_history = JSON_ARRAY_APPEND(COALESCE(bid_history, \"[]\"), \"$\", JSON_OBJECT(\"amount\", :bid_amount, \"bidder_id\", :bidder_id, \"timestamp\", NOW())) WHERE listing_id = :listing_id AND current_high_bid < :bid_amount",
+        "hash": "sha256:7b75f7334c283f247b86cc7a23c918784ea91612f8e7116ca7b357c9b5dc146e"
       },
       "fail_closed": true,
       "timeout_ms": 2000,
